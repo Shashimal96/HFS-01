@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="{{ url_for('static', filename='styles.css') }}"
+      rel="stylesheet"
+    />
+    <title>prediction-heart failure prediction</title>
+  </head>
+  <body>
+    <div class="bg-white">
+      <header class="absolute inset-x-0 top-0 z-50">
+        <nav
+          class="flex items-center justify-between p-6 lg:px-8"
+          aria-label="Global"
+        >
+          <div class="flex lg:flex-1">
+            <a href="#" class="-m-1.5 p-1.5">
+              <span class="sr-only">Heart Faliure Prediction</span>
+            </a>
+          </div>
+          <div class="flex lg:hidden">
+            <button
+              type="button"
+              class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            >
+              <span class="sr-only">Open main menu</span>
+              <svg
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                />
+              </svg>
+            </button>
+          </div>
+          <div class="hidden lg:flex lg:gap-x-12">
+            <a
+              href="/predict"
+              class="text-sm font-semibold leading-6 text-gray-900 border-b border-gray-900/10"
+              >Heart Prediction</a
+            >
+            <a
+              href="/results"
+              class="text-sm font-semibold leading-6 text-gray-900 border-b border-gray-900/10"
+              >Patient Details</a
+            >
+          </div>
+          <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+            <a href="#" class="text-sm font-semibold leading-6 text-gray-900"
+              >Log out <span aria-hidden="true">&rarr;</span></a
+            >
+          </div>
+        </nav>
+        <!-- Mobile menu, show/hide based on menu open state. -->
+        <div class="lg:hidden" role="dialog" aria-modal="true">
+          <!-- Background backdrop, show/hide based on slide-over state. -->
+          <div class="fixed inset-0 z-50"></div>
+          <div
+            class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
+          >
+            <div class="flex items-center justify-between">
+              <a href="#" class="-m-1.5 p-1.5">
+                <span class="sr-only">Heart Faliure Prediction</span>
+              </a>
+              <button
+                type="button"
+                class="-m-2.5 rounded-md p-2.5 text-gray-700"
+              >
+                <span class="sr-only">Close menu</span>
+                <svg
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div class="mt-6 flow-root">
+              <div class="-my-6 divide-y divide-gray-500/10">
+                <div class="space-y-2 py-6">
+                  <a
+                    href="/predict"
+                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    >Heart Prediction</a
+                  >
+                  <a
+                    href="/results"
+                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    >Patient Details</a
+                  >
+                </div>
+                <div class="py-6">
+                  <a
+                    href="#"
+                    class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    >Log out</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="relative isolate px-6 pt-14 lg:px-8">
+        <div
+          class="absolute inset-x-0 -top-20 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+          aria-hidden="true"
+        >
+          <div
+            class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+            style="
+              clip-path: polygon(
+                74.1% 44.1%,
+                100% 61.6%,
+                97.5% 26.9%,
+                85.5% 0.1%,
+                80.7% 2%,
+                72.5% 32.5%,
+                60.2% 62.4%,
+                52.4% 68.1%,
+                47.5% 58.3%,
+                45.2% 34.5%,
+                27.5% 76.7%,
+                0.1% 64.9%,
+                17.9% 100%,
+                27.6% 76.8%,
+                76.1% 97.7%,
+                74.1% 44.1%
+              );
+            "
+          ></div>
+        </div>
+        <div class="mx-auto max-w-2xl">
+          <div class="text-center">
+            <h1 class="text-3xl">Predicting Heart Failure</h1>
+            <form id="predict-form">
+              <div class="space-y-12">
+                <div class="border-b border-gray-900/10 pb-12">
+                  <div
+                    class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
+                  >
+                    <div class="sm:col-span-6">
+                      <label
+                        for="national_id"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >National ID</label
+                      >
+                      <div class="mt-2">
+                        <input
+                          type="text"
+                          name="national_id"
+                          id="national_id"
+                          autocomplete="national_id"
+                          class="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                      <label
+                        for="age"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >Age</label
+                      >
+                      <div class="mt-2">
+                        <input
+                          type="number"
+                          name="age"
+                          id="age"
+                          autocomplete="age"
+                          class="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                      <label
+                        for="anaemia"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >Anaemia</label
+                      >
+                      <div class="mt-2">
+                        <select
+                          id="anaemia"
+                          name="anaemia"
+                          autocomplete="anaemia"
+                          class="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        >
+                          <option value="1">Yes(1)</option>
+                          <option value="0">No(0)</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                      <label
+                        for="creatinine_phosphokinase"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >Creatinine Phosphokinase</label
+                      >
+                      <div class="mt-2">
+                        <input
+                          type="text"
+                          name="creatinine_phosphokinase"
+                          id="creatinine_phosphokinase"
+                          autocomplete="creatinine_phosphokinase"
+                          class="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-2 sm:col-start-1">
+                      <label
+                        for="diabetes"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >Diabetes</label
+                      >
+                      <div class="mt-2">
+                        <select
+                          id="diabetes"
+                          name="diabetes"
+                          autocomplete="diabetes"
+                          class="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        >
+                          <option value="1">Yes(1)</option>
+                          <option value="0">No(0)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                      <label
+                        for="ejection_fraction"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >Ejection Fraction</label
+                      >
+                      <div class="mt-2">
+                        <input
+                          type="number"
+                          name="ejection_fraction"
+                          id="ejection_fraction"
+                          autocomplete="ejection_fraction"
+                          class="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                      <label
+                        for="high_blood_pressure"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >High Blood Pressure</label
+                      >
+                      <div class="mt-2">
+                        <select
+                          id="high_blood_pressure"
+                          name="high_blood_pressure"
+                          autocomplete="high_blood_pressure"
+                          class="text-center text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        >
+                          <option value="1">Yes(1)</option>
+                          <option value="0">No(0)</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                      <label
+                        for="platelets"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >Platelets</label
+                      >
+                      <div class="mt-2">
+                        <input
+                          type="number"
+                          name="platelets"
+                          id="platelets"
+                          autocomplete="platelets"
+                          class="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                      <label
+                        for="serum_creatinine"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >Serum Creatinine</label
+                      >
+                      <div class="mt-2">
+                        <input
+                          type="number"
+                          name="serum_creatinine"
+                          id="serum_creatinine"
+                          autocomplete="serum_creatinine"
+                          class="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                      <label
+                        for="serum_sodium"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >Serum Sodium</label
+                      >
+                      <div class="mt-2">
+                        <input
+                          type="number"
+                          name="serum_sodium"
+                          id="serum_sodium"
+                          autocomplete="serum_sodium"
+                          class="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                      <label
+                        for="sex"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >Sex</label
+                      >
+                      <div class="mt-2">
+                        <select
+                          id="sex"
+                          name="sex"
+                          autocomplete="sex"
+                          class="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        >
+                          <option value="1">Male</option>
+                          <option value="0">Female</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="sm:col-span-2">
+                      <label
+                        for="smoking"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >Smoking</label
+                      >
+                      <div class="mt-2">
+                        <select
+                          id="smoking"
+                          name="smoking"
+                          autocomplete="smoking"
+                          class="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                        >
+                          <option value="1">Yes (1)</option>
+                          <option value="0">No (0)</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="sm:col-span-2">
+                      <label
+                        for="time"
+                        class="block text-sm font-medium leading-6 text-gray-900"
+                        >Follow-up Time</label
+                      >
+                      <div class="mt-2">
+                        <input
+                          type="number"
+                          name="time"
+                          id="time"
+                          autocomplete="time"
+                          class="text-center block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="border-b border-gray-900/10 pb-12">
+                  <h2 class="text-base font-semibold leading-7 text-gray-900">
+                    Result
+                  </h2>
+                  <p class="mt-1 text-sm leading-6 text-gray-600" id="result">
+                    .Risk factors for heart failure include unhealthy diet..
+                  </p>
+                </div>
+              </div>
+
+              <div class="mt-6 flex items-center justify-end gap-x-6">
+                <button
+                  type="button"
+                  class="text-sm font-semibold leading-6 text-gray-900"
+                >
+                  Clear
+                </button>
+                <button
+                  type="submit"
+                  class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                >
+                  Predict
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      document
+        .getElementById("predict-form")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+          const national_id = document.getElementById("national_id").value;
+          const age = document.getElementById("age").value;
+          const anaemia = document.getElementById("anaemia").value;
+          const creatinine_phosphokinase = document.getElementById(
+            "creatinine_phosphokinase"
+          ).value;
+          const diabetes = document.getElementById("diabetes").value;
+          const ejection_fraction =
+            document.getElementById("ejection_fraction").value;
+          const high_blood_pressure = document.getElementById(
+            "high_blood_pressure"
+          ).value;
+          const platelets = document.getElementById("platelets").value;
+          const serum_creatinine =
+            document.getElementById("serum_creatinine").value;
+          const serum_sodium = document.getElementById("serum_sodium").value;
+          const sex = document.getElementById("sex").value;
+          const smoking = document.getElementById("smoking").value;
+          const time = document.getElementById("time").value;
+
+          const response = await fetch("/predict", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              national_id,
+              features: {
+                age,
+                anaemia,
+                creatinine_phosphokinase,
+                diabetes,
+                ejection_fraction,
+                high_blood_pressure,
+                platelets,
+                serum_creatinine,
+                serum_sodium,
+                sex,
+                smoking,
+                time,
+              },
+            }),
+          });
+
+          const result = await response.json();
+          document.getElementById(
+            "result"
+          ).innerText = `Prediction: ${result.prediction}\nProbability: ${result.prediction_proba}`;
+        });
+    </script>
+  </body>
+</html>
